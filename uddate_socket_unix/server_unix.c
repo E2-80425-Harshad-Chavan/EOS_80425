@@ -33,14 +33,14 @@ int main()
         printf("........failed to  bind.......");
     }
     listen(server_fd,5);
-
-
-   // while (1)
-    {    
-    memset(&cli_add,0,sizeof(cli_add));
+	memset(&cli_add,0,sizeof(cli_add));
     cli_add.sun_family = AF_UNIX;
     strcpy(cli_add.sun_path,PATH);
     socklen = sizeof(cli_add);
+
+   while (1)
+    {    
+    
     cli_fd = accept(server_fd,(struct sockaddr *)&cli_add,&socklen);
     if(cli_fd < 0)
     {
@@ -53,11 +53,13 @@ int main()
     str.num1=str.num1+str.num2;
     printf("send back to client ");
     write(cli_fd,&str,sizeof(str)-sizeof(int));
+    close(cli_fd);
+    }
     
     //printf("\n-->%s",str);
 
     close(server_fd);
-    close(cli_fd);
+	unlink("/tmp/harshad_unix");    
     shutdown(server_fd, SHUT_RDWR);
 
 }
